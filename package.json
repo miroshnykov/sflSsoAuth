@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node server.js - --conf=/home/conf/config.js"
+    "start": "node server.js --conf=/home/conf/config.js"
   },
   "dependencies": {
     "base-64": "^0.1.0",
