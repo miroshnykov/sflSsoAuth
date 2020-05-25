@@ -18,15 +18,6 @@ config = {
         password: '',
         database: ''
     },
-    pcapi: {
-        host: '"http://localhost:4002/"'
-    },
-    aws: {
-        key: '',
-        access_key: '',
-        region: '',
-        queueUrl: ''
-    },
     googleAuth: {
         oauthCallback: '',
         pcapi: {
@@ -43,12 +34,7 @@ config = {
         },
         clientId: '',
         clientSecret: ''
-    },
-    moneyBadger: {
-        url: '',
-        secret: ''
     }
-    // moneyBadgerUrl:'http://moneybadger01.infra.systems:8822'
 }
 
 module.exports = config
