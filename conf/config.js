@@ -29,9 +29,18 @@ config = {
     },
     googleAuth: {
         oauthCallback: '',
-        redirectToOptiPlatformsuccesslogin: '',
-        redirectToOptiPlatformerrorlogin: '',
-        redirectToOptiPlatformsuccess: '',
+        pcapi: {
+            successLogin: '',
+            errorLogin: ''
+        },
+        opti: {
+            successLogin: '',
+            errorLogin: ''
+        },
+        sfl: {
+            successLogin: '',
+            errorLogin: ''
+        },
         clientId: '',
         clientSecret: ''
     },

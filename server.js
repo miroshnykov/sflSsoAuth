@@ -28,23 +28,36 @@ app.use(cors())
 
 const getOAuthClient = () => (new oAuth2(clientId, clientSecret, oauthCallback))
 
-const getAuthUrl = () => {
+const getAuthUrl = (projectName) => {
     let oauth2Client = getOAuthClient()
     let scopes = [
         'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'
+        'https://www.googleapis.com/auth/userinfo.email',
     ]
 
     return oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        scope: scopes
+        scope: scopes,
+        state: JSON.stringify({project: projectName}),
     })
 
 }
 
-const getTokenSaveSession = async (code, res) => {
+const getTokenSaveSession = async (code, state, res) => {
     let oauth2Client = getOAuthClient()
     return oauth2Client.getToken(code, (err, tokens) => {
+
+        let projectInfo = JSON.parse(state)
+
+        let successLogin = config.googleAuth[projectInfo.project].successLogin
+        let errorLogin = config.googleAuth[projectInfo.project].errorLogin
+
+        console.log(` Project { ${projectInfo.project} }. successLogin:${successLogin} , errorLogin:${errorLogin}`)
+
+        if (!successLogin) {
+            console.log('  THERE IS NO REDIRECT URL, the project does not define  correctly ')
+            return
+        }
 
         if (!err) {
             oauth2Client.setCredentials(tokens)
@@ -55,17 +68,21 @@ const getTokenSaveSession = async (code, res) => {
                     info.hd === 'grindstonecapital.ca' ||
                     info.hd === 'hyuna.bb'
                 ) {
+                    let token = jwt.sign({email: info.email, id: sessionId}, config.jwt_secret, {expiresIn: '1h'})
+                    let bytes = utf8.encode(token);
+                    let encoded = base64.encode(bytes);
 
-                    res.redirect(`${config.googleAuth.redirectToOptiPlatformsuccess}id=${sessionId}&email=${info.email}`)
+                    res.redirect(`${successLogin}${encoded}`)
                 } else {
                     let emailToSend = info.email.split('.').join("")
-                    res.redirect(`${config.googleAuth.redirectToOptiPlatformerrorlogin}${emailToSend}`)
+                    console.log(`Wrong domaine name ${emailToSend}`)
+                    res.redirect(`${errorLogin}${emailToSend}`)
                 }
             })
 
         } else {
             console.error('err:', err)
-            res.redirect(`${config.googleAuth.redirectToOptiPlatformerrorlogin}/error`)
+            res.redirect(`${errorLogin}/error`)
         }
     })
 }
@@ -91,8 +108,7 @@ app.get('/health', (req, res, next) => {
 })
 
 app.get('/loginUrl', (req, res) => {
-    let url = getAuthUrl()
-    console.log('loginUrl:', url)
+    let url = getAuthUrl(req.query.projectName)
     res.json(url)
 })
 
@@ -115,25 +131,9 @@ app.get('/verifyToken', (req, res) => {
 })
 
 app.get('/oauthCallback', async (req, res) => {
-    await getTokenSaveSession(req.query.code, res)
+    await getTokenSaveSession(req.query.code, req.query.state, res)
 })
 
-app.get('/successlogin', async (req, res) => {
-
-    console.log('successlogin')
-    console.log(req.query)
-    let token = jwt.sign({email: req.query.email, id: req.query.id}, config.jwt_secret, {expiresIn: '1h'})
-    let bytes = utf8.encode(token);
-    let encoded = base64.encode(bytes);
-
-    res.redirect(`${config.googleAuth.redirectToOptiPlatformsuccesslogin}${encoded}`)
-})
-
-app.get('/errorlogin', async (req, res) => {
-    console.log(` *** google auth error by this email:${req.query.email}`)
-    res.redirect(`${config.googleAuth.redirectToOptiPlatformerrorlogin}${req.query.email}`)
-    // await getTokenSaveSession(req.query.code, res)
-})
 
 app.get('/getUser', async (req, res) => {
     let email = req.query.email

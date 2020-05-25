@@ -14,7 +14,7 @@ const getUser = async (email) => {
                 u.picture as picture,
                 u.link as link,
                 u.hd as hd 
-            from opti_users u 
+            from google_oauth2_user u 
             where u.email = '${email}'
         `)
         await dbMysql.end()
@@ -35,7 +35,7 @@ const setUser = async (data) => {
         console.time('setUser')
 
         let result = await dbMysql.query(` 
-            INSERT IGNORE INTO opti_users (email, google_id, name, given_name, family_name, picture, link, hd) 
+            INSERT IGNORE INTO google_oauth2_user (email, google_id, name, given_name, family_name, picture, link, hd) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `, [email, id,name, given_name, family_name, picture, link, hd])
         await dbMysql.end()
