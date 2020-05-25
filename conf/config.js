@@ -8,7 +8,7 @@ let config
 
 config = {
     env: process.env.NODE_ENV || env || `production`,
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 9080,
     jwt_secret: '',
     mysql: {
