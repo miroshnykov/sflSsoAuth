@@ -21,8 +21,8 @@ config = {
     googleAuth: {
         oauthCallback: '',
         pcapi: {
-            successLogin: '',
-            errorLogin: ''
+            successLogin: 'https://pcapi.surge.systems/#/successLogin/',
+            errorLogin: 'https://pcapi.surge.systems/#/errorLogin/'
         },
         opti: {
             successLogin: 'https://optiai-platform1.surge.systems/successLogin/',
