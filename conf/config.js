@@ -32,6 +32,10 @@ config = {
             successLogin: 'https://sfl-advertiser.surge.systems/#/successLogin/',
             errorLogin: 'https://sfl-advertiser.surge.systems/#/errorLogin/'
         },
+        cap: {
+            successLogin: 'http://localhost:8080/#/successLogin/',
+            errorLogin: 'http://localhost:8080/#/errorLogin/'
+        },
         clientId: '',
         clientSecret: ''
     }
