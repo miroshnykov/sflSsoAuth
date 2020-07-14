@@ -143,11 +143,13 @@ app.get('/getUser', async (req, res) => {
 })
 
 setInterval(() => {
+    console.log(' interval system config.env:', config.env)
     if (config.env === 'development') return
     metrics.sendMetricsSystem()
 }, config.influxdb.intervalSystem)
 
 setInterval(() => {
+    console.log('interval Disk config.env:', config.env)
     if (config.env === 'development') return
     metrics.sendMetricsDisk()
 }, config.influxdb.intervalDisk)
