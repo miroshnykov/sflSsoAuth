@@ -18,6 +18,7 @@ const {getUser, setUser} = require('./db/user')
 const {v4} = require('uuid')
 const base64 = require('base-64')
 const utf8 = require('utf8')
+const metrics = require('./metrics')
 
 const PORT = config.port
 const HOST = config.host
@@ -140,6 +141,16 @@ app.get('/getUser', async (req, res) => {
     let user = await getUser(email)
     res.json(user)
 })
+
+setInterval(() => {
+    if (config.env === 'development') return
+    metrics.sendMetricsSystem()
+}, config.influxdb.intervalSystem)
+
+setInterval(() => {
+    if (config.env === 'development') return
+    metrics.sendMetricsDisk()
+}, config.influxdb.intervalDisk)
 
 app.listen({port: PORT, host: HOST}, () =>
     console.log(`\n🚀\x1b[35m backend Running on  http://${HOST}:${PORT} \x1b[0m \n`)
