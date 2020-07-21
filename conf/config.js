@@ -36,6 +36,11 @@ config = {
             successLogin: 'http://localhost:8080/#/successLogin/',
             errorLogin: 'http://localhost:8080/#/errorLogin/'
         },
+        backoffice: {
+            successLogin: 'http://localhost:8080/successLogin/',
+            errorLogin: 'http://localhost:8080/errorLogin/',
+            expiresIn: '8h'
+        },
         clientId: '',
         clientSecret: ''
     },
