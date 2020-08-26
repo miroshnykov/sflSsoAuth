@@ -37,8 +37,8 @@ config = {
             errorLogin: 'https://cap-ui.surge.systems/#/errorLogin/'
         },
         backoffice: {
-            successLogin: 'http://localhost:8080/successLogin/',
-            errorLogin: 'http://localhost:8080/errorLogin/',
+            successLogin: 'https://backoffice.surge.systems/successLogin/',
+            errorLogin: 'https://backoffice.surge.systems/errorLogin/',
             expiresIn: '8h'
         },
         clientId: '',
@@ -56,5 +56,4 @@ config = {
         intervalDisk: 60000 // 300000 ms = 5 min
     }
 }
-
 module.exports = config
