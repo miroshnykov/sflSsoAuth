@@ -65,6 +65,7 @@ const getTokenSaveSession = async (code, state, res) => {
             let sessionId = v4()
             getUserInfo(tokens).then((info) => {
 
+                console.log('config.whiteList:',config.whiteList)
                 if (config.whiteList.domains.includes(info.hd) ||
                     config.whiteList.emails.includes(info.email)
                 ) {
