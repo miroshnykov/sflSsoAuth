@@ -44,6 +44,10 @@ config = {
         clientId: '',
         clientSecret: ''
     },
+    whiteList: {
+        emails: ['eric@ad-center.com', 'jeffrey@ad-center.com', 'artem.makarov@actionmediamtl.com', 'miroshnykov@gmail.com'],
+        domains: ['actionmediamtl.com', 'grindstonecapital.ca', 'hyuna.bb']
+    },
     influxdb: {
         host: 'https://influx.surge.systems/influxdb',
         project: 'ssoAuth',
