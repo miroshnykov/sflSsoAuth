@@ -65,11 +65,17 @@ const getTokenSaveSession = async (code, state, res) => {
             let sessionId = v4()
             getUserInfo(tokens).then((info) => {
 
-                if (info.hd === 'actionmediamtl.com' ||
-                    info.hd === 'grindstonecapital.ca' ||
-                    info.hd === 'hyuna.bb'
+                if (config.whiteList.domains.includes(info.hd) ||
+                    config.whiteList.emails.includes(info.email)
                 ) {
-                    let token = jwt.sign({email: info.email, id: sessionId}, config.jwt_secret, {expiresIn: '1h'})
+                    const project = projectInfo.project;
+
+                    const expiresIn = (project && config.googleAuth[project] && config.googleAuth[project].expiresIn)
+                        ? config.googleAuth[project].expiresIn
+                        : '1h';
+
+                    let token = jwt.sign({email: info.email, id: sessionId}, config.jwt_secret, {expiresIn})
+
                     let bytes = utf8.encode(token);
                     let encoded = base64.encode(bytes);
 

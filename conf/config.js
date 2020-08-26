@@ -8,7 +8,7 @@ let config
 
 config = {
     env: process.env.NODE_ENV || env || `production`,
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 9080,
     jwt_secret: '',
     mysql: {
@@ -33,11 +33,20 @@ config = {
             errorLogin: 'https://sfl-advertiser.surge.systems/#/errorLogin/'
         },
         cap: {
-            successLogin: 'http://localhost:8080/#/successLogin/',
-            errorLogin: 'http://localhost:8080/#/errorLogin/'
+            successLogin: 'https://cap-ui.surge.systems/#/successLogin/',
+            errorLogin: 'https://cap-ui.surge.systems/#/errorLogin/'
+        },
+        backoffice: {
+            successLogin: 'https://backoffice.surge.systems/successLogin/',
+            errorLogin: 'https://backoffice.surge.systems/errorLogin/',
+            expiresIn: '8h'
         },
         clientId: '',
         clientSecret: ''
+    },
+    whiteList: {
+        emails: ['eric@ad-center.com', 'jeffrey@ad-center.com', 'artem.makarov@actionmediamtl.com', 'miroshnykov@gmail.com'],
+        domains: ['actionmediamtl.com', 'grindstonecapital.ca', 'hyuna.bb']
     },
     influxdb: {
         host: 'https://influx.surge.systems/influxdb',
@@ -47,5 +56,4 @@ config = {
         intervalDisk: 60000 // 300000 ms = 5 min
     }
 }
-
 module.exports = config
