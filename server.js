@@ -69,7 +69,7 @@ const getTokenSaveSession = async (code, state, res) => {
                     config.whiteList.emails.includes(info.email)
                 ) {
                     const project = projectInfo.project;
-
+                    console.log(`login with project-${project}`)
                     const expiresIn = (project && config.googleAuth[project] && config.googleAuth[project].expiresIn)
                         ? config.googleAuth[project].expiresIn
                         : '1h';
