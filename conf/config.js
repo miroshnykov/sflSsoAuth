@@ -45,7 +45,7 @@ config = {
         clientSecret: ''
     },
     whiteList: {
-        emails: ['eric@ad-center.com', 'jeffrey@ad-center.com', 'jeffrey.tayoto@adsurge.com','jeffrey.tayoto@ad-center.com','artem.makarov@actionmediamtl.com', 'miroshnykov@gmail.com'],
+        emails: ['eric@ad-center.com', 'eric.pedersen@ad-center.com','jeffrey@ad-center.com', 'jeffrey.tayoto@adsurge.com','jeffrey.tayoto@ad-center.com','artem.makarov@actionmediamtl.com', 'miroshnykov@gmail.com'],
         domains: ['actionmediamtl.com', 'grindstonecapital.ca', 'hyuna.bb']
     },
     influxdb: {
