@@ -8,6 +8,10 @@
 # verify Token
 
 > http://0.0.0.0:9080/verifyToken
+
+# start
+
+> node server.js
  
 # local setup config 
 
