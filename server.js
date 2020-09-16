@@ -158,7 +158,7 @@ setInterval(() => {
     metrics.sendMetricsDisk()
 }, config.influxdb.intervalDisk)
 
-app.listen({port: PORT, host: HOST}, () =>
-    console.log(`\n🚀\x1b[35m backend Running on  http://${HOST}:${PORT} \x1b[0m \n`)
-)
+app.listen({port: PORT, host: HOST}, () =>{
+    console.log(`\n🚀\x1b[35m backend Running on  http://${HOST}:${PORT} ENV-${config.env} \x1b[0m \n`)
+})
 
