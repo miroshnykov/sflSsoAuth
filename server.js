@@ -13,7 +13,7 @@ const config = require('plain-config')()
 const clientId = config.googleAuth.clientId
 const clientSecret = config.googleAuth.clientSecret
 const oauthCallback = config.googleAuth.oauthCallback
-const {getUser, setUser} = require('./db/user')
+const {getUser, setUser, getUserPermissions} = require('./db/user')
 
 const {v4} = require('uuid')
 const base64 = require('base-64')
@@ -29,17 +29,24 @@ app.use(cors())
 
 const getOAuthClient = () => (new oAuth2(clientId, clientSecret, oauthCallback))
 
-const getAuthUrl = (projectName) => {
+const getAuthUrl = (projectName, appKey) => {
     let oauth2Client = getOAuthClient()
     let scopes = [
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/userinfo.email',
     ]
 
+    const state = {
+        project: projectName
+    };
+    if (appKey) {
+        state.app_key = appKey;
+    }
+
     return oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: scopes,
-        state: JSON.stringify({project: projectName}),
+        state: JSON.stringify(state),
     })
 
 }
@@ -63,27 +70,35 @@ const getTokenSaveSession = async (code, state, res) => {
         if (!err) {
             oauth2Client.setCredentials(tokens)
             let sessionId = v4()
-            getUserInfo(tokens).then((info) => {
+            getUserInfo(tokens).then(async (info) => {
+                try {
+                    const userPermissions = await getUserPermissions(info.employee_id, projectInfo.app_key);
+                    // @todo remove check for domain end emails after adding permissions
+                    if ((projectInfo.project !== 'umbrella' && projectInfo.project !== 'backoffice' && config.whiteList.domains.includes(info.hd)) ||
+                        (projectInfo.project !== 'umbrella' && projectInfo.project !== 'backoffice' && config.whiteList.emails.includes(info.email)) ||
+                        userPermissions.includes('login')
+                        || (info.is_admin && projectInfo.project === 'umbrella')
+                    ) {
+                        const project = projectInfo.project;
+                        console.log(`login with project-${project}`)
+                        const expiresIn = (project && config.googleAuth[project] && config.googleAuth[project].expiresIn)
+                            ? config.googleAuth[project].expiresIn
+                            : '1h';
 
-                if (config.whiteList.domains.includes(info.hd) ||
-                    config.whiteList.emails.includes(info.email)
-                ) {
-                    const project = projectInfo.project;
-                    console.log(`login with project-${project}`)
-                    const expiresIn = (project && config.googleAuth[project] && config.googleAuth[project].expiresIn)
-                        ? config.googleAuth[project].expiresIn
-                        : '1h';
+                        let token = jwt.sign({email: info.email, id: sessionId}, config.jwt_secret, {expiresIn})
 
-                    let token = jwt.sign({email: info.email, id: sessionId}, config.jwt_secret, {expiresIn})
+                        let bytes = utf8.encode(token);
+                        let encoded = base64.encode(bytes);
 
-                    let bytes = utf8.encode(token);
-                    let encoded = base64.encode(bytes);
-
-                    res.redirect(`${successLogin}${encoded}`)
-                } else {
-                    let emailToSend = info.email.split('.').join("")
-                    console.log(`Wrong domaine name ${emailToSend}`)
-                    res.redirect(`${errorLogin}${emailToSend}`)
+                        res.redirect(`${successLogin}${encoded}`)
+                    } else {
+                        let emailToSend = info.email.split('.').join("")
+                        console.log(`Wrong domaine name ${emailToSend}`)
+                        res.redirect(`${errorLogin}${emailToSend}`)
+                    }
+                } catch (error) {
+                    console.error('err:', error)
+                    res.redirect(`${errorLogin}/error`)
                 }
             })
 
@@ -107,15 +122,30 @@ const getUserInfo = async (tokens) => {
 
     await setUser(info.data)
 
+    const user = await getUserByEmail(info.data.email);
+
+    info.data.employee_id = user.employee_id;
+    info.data.is_admin = user.is_admin;
+
     return info.data
 }
+
+const getUserByEmail = async (email) => {
+
+    const userArray = await getUser(email);
+    if (!userArray || !userArray[0]) {
+        return;
+    }
+    return userArray[0];
+};
 
 app.get('/health', (req, res, next) => {
     res.send('Ok')
 })
 
 app.get('/loginUrl', (req, res) => {
-    let url = getAuthUrl(req.query.projectName)
+    const appKey = req.headers['am-app-key'];
+    let url = getAuthUrl(req.query.projectName, appKey)
     res.json(url)
 })
 
@@ -138,6 +168,8 @@ app.get('/verifyToken', (req, res) => {
 })
 
 app.get('/oauthCallback', async (req, res) => {
+    console.log(req.query.projectName);
+    console.log(req.query.state);
     await getTokenSaveSession(req.query.code, req.query.state, res)
 })
 
@@ -145,6 +177,12 @@ app.get('/oauthCallback', async (req, res) => {
 app.get('/getUser', async (req, res) => {
     let email = req.query.email
     let user = await getUser(email)
+    const appKey = req.headers['am-app-key'];
+
+    for (let i = 0; i < user.length; i++) {
+        user[i].permissions = appKey ? await getUserPermissions(user[i].employee_id, appKey) : [];
+    }
+
     res.json(user)
 })
 
