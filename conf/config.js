@@ -41,6 +41,11 @@ config = {
             errorLogin: 'https://backoffice.surge.systems/errorLogin/',
             expiresIn: '8h'
         },
+        umbrella: {
+            successLogin: 'https://umbrella.surge.systems/successLogin/',
+            errorLogin: 'https://umbrella.surge.systems/errorLogin/',
+            expiresIn: '8h'
+        },
         clientId: '',
         clientSecret: ''
     },

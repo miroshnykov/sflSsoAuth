@@ -17,8 +17,20 @@ const getUser = async (email) => {
             from google_oauth2_user u 
             where u.email = '${email}'
         `)
-        await dbMysql.end()
 
+        let employee = await dbMysql.query(`
+            SELECT e.id, e.is_admin FROM employees e 
+            LEFT JOIN am_employee_emails aee ON e.id = aee.employee_id 
+            WHERE e.email = '${email}' OR aee.email = '${email}' 
+            LIMIT 1
+        `);
+
+        await dbMysql.end();
+        if (employee && employee[0]) {
+            if (result && result[0])
+            result[0].employee_id = employee[0].id;
+            result[0].is_admin = employee[0].is_admin;
+        }
         // console.timeEnd('getUser')
         // console.log(`getUser count:${result.length}\n`)
         return result
@@ -47,7 +59,36 @@ const setUser = async (data) => {
     }
 }
 
+const getUserPermissions = async (employeeId, appKey) => {
+    try {
+        let result = await dbMysql.query(`SELECT p.\`key\` FROM am_permissions AS p 
+                INNER JOIN am_applications AS a ON p.application_id = a.id 
+                INNER JOIN am_role_permissions AS rp ON p.id = rp.permission_id
+                INNER JOIN am_roles AS r ON r.id = rp.role_id
+                INNER JOIN am_employee_roles AS er ON er.role_id = r.id
+                WHERE a.\`key\` = ? AND er.employee_id = ?;`, [appKey, employeeId]);
+
+        await dbMysql.end();
+
+        console.log('get permissions');
+        console.log(result);
+
+        const permissions = [];
+
+        result.reduce((perms, perm) => {
+            perms.push(perm.key);
+            
+            return perms;
+        }, permissions);
+
+        return permissions;
+    } catch (e) {
+        console.log(e)
+    }
+};
+
 module.exports = {
     getUser,
-    setUser
+    setUser,
+    getUserPermissions
 }
