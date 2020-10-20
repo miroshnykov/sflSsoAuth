@@ -73,9 +73,11 @@ const getTokenSaveSession = async (code, state, res) => {
             getUserInfo(tokens).then(async (info) => {
                 try {
                     const userPermissions = await getUserPermissions(info.employee_id, projectInfo.app_key);
-                    // @todo remove check for domain end emails after adding permissions
-                    if ((projectInfo.project !== 'umbrella' && projectInfo.project !== 'backoffice' && config.whiteList.domains.includes(info.hd)) ||
-                        (projectInfo.project !== 'umbrella' && projectInfo.project !== 'backoffice' && config.whiteList.emails.includes(info.email)) ||
+                    // @todo remove check for domain end emails after adding permissions and logs
+                    console.log(`permissions for user ${info.employee_id} and project ${projectInfo.project}`);
+                    console.log(userPermissions);
+                    if ((projectInfo.project !== 'umbrella' && config.whiteList.domains.includes(info.hd)) ||
+                        (projectInfo.project !== 'umbrella' && config.whiteList.emails.includes(info.email)) ||
                         userPermissions.includes('login')
                         || (info.is_admin && projectInfo.project === 'umbrella')
                     ) {
