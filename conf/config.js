@@ -36,6 +36,10 @@ config = {
             successLogin: 'https://cap-ui.surge.systems/#/successLogin/',
             errorLogin: 'https://cap-ui.surge.systems/#/errorLogin/'
         },
+        sflAdmin: {
+            successLogin: 'https://sfl-ui.surge.systems/#/successLogin/',
+            errorLogin: 'https://sfl-ui.surge.systems/#/errorLogin/'
+        },
         backoffice: {
             successLogin: 'https://backoffice.surge.systems/successLogin/',
             errorLogin: 'https://backoffice.surge.systems/errorLogin/',
