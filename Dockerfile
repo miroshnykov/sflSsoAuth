@@ -14,4 +14,15 @@ WORKDIR /home/app
 COPY . .
 RUN npm install
 EXPOSE 9080
-CMD [ "npm", "start" ]
+
+# Required to push into different stages.
+ARG branch
+ENV BRANCH=${branch}
+
+ENTRYPOINT if [ "$BRANCH" = "stage1" ] ; then \
+               npm run stage1 ; \
+           elif [ "$BRANCH" = "stage2" ] ; then \
+               npm run stage2 ; \
+           else \
+               npm run prod ; \
+           fi
