@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node server.js --conf=/run/secrets/am-ssoauth.js",
+    "start": "node server.js --conf=/run/secrets/ssoauth-prod.js",
     "dev": "node server.js --conf=conf/config-local.js"
   },
   "dependencies": {
