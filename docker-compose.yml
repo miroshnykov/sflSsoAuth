@@ -1,0 +1,31 @@
+version: '3'
+services:
+  ssoauth:
+    build: .
+    container_name: ssoauth
+    volumes:
+      - .:/home/app
+    external_links:
+      - actionmedia
+    expose:
+      - "9080"
+    environment:
+      - BRANCH=dev
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`ssoauth.local`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+
+networks:
+  proxy:
+    external: true
+  default:
+    external:
+      name: actionmedia-network

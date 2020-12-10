@@ -23,6 +23,8 @@ ENTRYPOINT if [ "$BRANCH" = "stage1" ] ; then \
                npm run stage1 ; \
            elif [ "$BRANCH" = "stage2" ] ; then \
                npm run stage2 ; \
+           elif [ "$BRANCH" = "dev" ] ; then \
+                npm run dev ; \
            else \
                npm run prod ; \
            fi
