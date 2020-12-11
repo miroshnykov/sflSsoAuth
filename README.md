@@ -1,3 +1,20 @@
+# local setup config 
+
+- Refer to the wiki page of the project. There is 2 files need to copy. 
+    - copy config-local.js into ./conf folder 
+    - copy .env file in / directtory of the project.
+    - edit /etc/hosts and add the following
+        > 127.0.0.1       ssoauth-local.surge.systems
+
+# Init
+- run the following: 
+    > docker-composde build && docker-compose up
+
+
+
+
+
+
 # SSO AUTH
 > general authentification  
 
@@ -13,29 +30,4 @@
 
 > node server.js
  
-# local setup config 
 
-
-    config.port = 9080
-    config.host = '0.0.0.0'
-
-    config.mysql.host = 'localhost'
-    config.mysql.port = 3007
-    config.mysql.user = 'root'
-    config.mysql.password = ''
-    config.mysql.database = 'jomedia2'
-    config.jwt_secret = 'hrenVam'
-
-    config.googleAuth.oauthCallback = 'http://localhost:9080/oauthCallback/'
-
-    config.googleAuth.pcapi.successLogin = 'http://localhost:8080/#/successLogin/'
-    config.googleAuth.pcapi.errorLogin = 'http://localhost:8080/#/errorLogin/'
-
-    config.googleAuth.opti.successLogin = 'http://localhost:8080/#/successLogin/'
-    config.googleAuth.opti.errorLogin = 'http://localhost:8080/#/errorLogin/'
-
-    config.googleAuth.sfl.successLogin = 'http://localhost:8080/#/successLogin/'
-    config.googleAuth.sfl.errorLogin = 'http://localhost:8080/#/errorLogin/'
-
-    config.googleAuth.clientId = ''
-    config.googleAuth.clientSecret = ''
