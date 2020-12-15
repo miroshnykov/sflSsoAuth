@@ -6,6 +6,19 @@ if (process.env.CI) {
 
 let config
 
+let postfix = '';
+
+switch (process.env.BRANCH) {
+    case 'stage1':
+        postfix = '-stage1';
+        break;
+    case 'stage2':
+        postfix = '-stage2';
+        break;
+    default:
+        postfix = '';
+}
+
 config = {
     env: process.env.NODE_ENV || env || `production`,
     host: '0.0.0.0',
@@ -41,8 +54,8 @@ config = {
             errorLogin: 'https://sfl-admin.surge.systems/#/errorLogin/'
         },
         backoffice: {
-            successLogin: 'https://backoffice.surge.systems/successLogin/',
-            errorLogin: 'https://backoffice.surge.systems/errorLogin/',
+            successLogin: `https://backoffice${postfix}.surge.systems/successLogin/`,
+            errorLogin: `https://backoffice${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
         umbrella: {
