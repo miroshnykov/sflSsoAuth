@@ -4,6 +4,17 @@ if (process.env.CI) {
     env = `CI`
 }
 
+let backOfficeHost = 'https://backoffice.surge.systems/';
+
+switch (process.env.BRANCH) {
+    case 'stage1':
+        backOfficeHost = 'https://backoffice-stage1.surge.systems/';
+        break;
+    case 'stage2':
+        backOfficeHost = 'https://backoffice-stage2.surge.systems/';
+        break;
+}
+
 let config
 
 config = {
@@ -41,8 +52,8 @@ config = {
             errorLogin: 'https://sfl-admin.surge.systems/#/errorLogin/'
         },
         backoffice: {
-            successLogin: 'https://backoffice.surge.systems/successLogin/',
-            errorLogin: 'https://backoffice.surge.systems/errorLogin/',
+            successLogin: backOfficeHost + 'successLogin/',
+            errorLogin: backOfficeHost + 'errorLogin/',
             expiresIn: '8h'
         },
         umbrella: {
