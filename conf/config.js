@@ -6,15 +6,17 @@ if (process.env.CI) {
 
 let config
 
-let backOfficeHost = 'https://backoffice.surge.systems/';
+let postfix = '';
 
 switch (process.env.BRANCH) {
     case 'stage1':
-        backOfficeHost = 'https://backoffice-stage1.surge.systems/';
+        postfix = '-stage1';
         break;
     case 'stage2':
-        backOfficeHost = 'https://backoffice-stage2.surge.systems/';
+        postfix = '-stage2';
         break;
+    default:
+        postfix = '';
 }
 
 config = {
@@ -52,8 +54,8 @@ config = {
             errorLogin: 'https://sfl-admin.surge.systems/#/errorLogin/'
         },
         backoffice: {
-            successLogin: backOfficeHost + 'successLogin/',
-            errorLogin: backOfficeHost + 'errorLogin/',
+            successLogin: `https://backoffice${postfix}.surge.systems/successLogin/`,
+            errorLogin: `https://backoffice${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
         umbrella: {
