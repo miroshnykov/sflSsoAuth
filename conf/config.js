@@ -59,8 +59,8 @@ config = {
             expiresIn: '8h'
         },
         umbrella: {
-            successLogin: 'https://umbrella.surge.systems/successLogin/',
-            errorLogin: 'https://umbrella.surge.systems/errorLogin/',
+            successLogin: `https://umbrella${postfix}.surge.systems/successLogin/`,
+            errorLogin: `https://umbrella${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
         clientId: '',
