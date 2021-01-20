@@ -67,8 +67,22 @@ config = {
         clientSecret: ''
     },
     whiteList: {
-        emails: ['eric@ad-center.com', 'eric.pedersen@ad-center.com','jeffrey@ad-center.com', 'jeffrey.tayoto@adsurge.com','jeffrey.tayoto@ad-center.com','artem.makarov@actionmediamtl.com', 'miroshnykov@gmail.com','nathan.parris@joventures.com'],
-        domains: ['actionmediamtl.com', 'grindstonecapital.ca', 'hyuna.bb', 'ad-center.com']
+        emails: [
+            'eric@ad-center.com',
+            'eric.pedersen@ad-center.com',
+            'jeffrey@ad-center.com',
+            'jeffrey.tayoto@adsurge.com',
+            'jeffrey.tayoto@ad-center.com',
+            'artem.makarov@actionmediamtl.com',
+            'maxim.litvinchik@milkbox.com',
+            'nathan.parris@joventures.com'
+        ],
+        domains: [
+            'actionmediamtl.com',
+            'grindstonecapital.ca',
+            'hyuna.bb',
+            'ad-center.com'
+        ]
     },
     influxdb: {
         host: 'https://influx.surge.systems/influxdb',
