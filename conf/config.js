@@ -6,6 +6,19 @@ if (process.env.CI) {
 
 let config
 
+let postfix = '';
+
+switch (process.env.BRANCH) {
+    case 'stage1':
+        postfix = '-stage1';
+        break;
+    case 'stage2':
+        postfix = '-stage2';
+        break;
+    default:
+        postfix = '';
+}
+
 config = {
     env: process.env.NODE_ENV || env || `production`,
     host: '0.0.0.0',
@@ -41,21 +54,35 @@ config = {
             errorLogin: 'https://sfl-admin.surge.systems/#/errorLogin/'
         },
         backoffice: {
-            successLogin: 'https://backoffice.surge.systems/successLogin/',
-            errorLogin: 'https://backoffice.surge.systems/errorLogin/',
+            successLogin: `https://backoffice${postfix}.surge.systems/successLogin/`,
+            errorLogin: `https://backoffice${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
         umbrella: {
-            successLogin: 'https://umbrella.surge.systems/successLogin/',
-            errorLogin: 'https://umbrella.surge.systems/errorLogin/',
+            successLogin: `https://umbrella${postfix}.surge.systems/successLogin/`,
+            errorLogin: `https://umbrella${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
         clientId: '',
         clientSecret: ''
     },
     whiteList: {
-        emails: ['eric@ad-center.com', 'eric.pedersen@ad-center.com','jeffrey@ad-center.com', 'jeffrey.tayoto@adsurge.com','jeffrey.tayoto@ad-center.com','artem.makarov@actionmediamtl.com', 'miroshnykov@gmail.com','nathan.parris@joventures.com'],
-        domains: ['actionmediamtl.com', 'grindstonecapital.ca', 'hyuna.bb', 'ad-center.com']
+        emails: [
+            'eric@ad-center.com',
+            'eric.pedersen@ad-center.com',
+            'jeffrey@ad-center.com',
+            'jeffrey.tayoto@adsurge.com',
+            'jeffrey.tayoto@ad-center.com',
+            'artem.makarov@actionmediamtl.com',
+            'maxim.litvinchik@milkbox.com',
+            'nathan.parris@joventures.com'
+        ],
+        domains: [
+            'actionmediamtl.com',
+            'grindstonecapital.ca',
+            'hyuna.bb',
+            'ad-center.com'
+        ]
     },
     influxdb: {
         host: 'https://influx.surge.systems/influxdb',
