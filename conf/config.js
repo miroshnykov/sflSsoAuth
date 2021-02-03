@@ -63,6 +63,11 @@ config = {
             errorLogin: `https://umbrella${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
+        paymentsTool: {
+            successLogin: `https://payments-tool${postfix}.surge.systems/successLogin/`,
+            errorLogin: `https://payments-tool${postfix}.surge.systems/errorLogin/`,
+            expiresIn: '8h'
+        },
         clientId: '',
         clientSecret: ''
     },
