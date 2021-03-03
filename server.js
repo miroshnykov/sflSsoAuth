@@ -199,6 +199,6 @@ setInterval(() => {
 }, config.influxdb.intervalDisk)
 
 app.listen({port: PORT, host: HOST}, () =>{
-    console.log(`\n🚀\x1b[35m backend Running on  http://${HOST}:${PORT} ENV-${config.env} \x1b[0m \n`)
+    console.log(`\n🚀\x1b[35m backend Running on  http://${HOST}:${PORT} Using node - { ${process.version} } ENV - { ${config.env} } \x1b[0m \n`)
 })
 
