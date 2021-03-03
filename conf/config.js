@@ -51,7 +51,8 @@ config = {
         },
         sflAdmin: {
             successLogin: 'https://sfl-admin.surge.systems/#/successLogin/',
-            errorLogin: 'https://sfl-admin.surge.systems/#/errorLogin/'
+            errorLogin: 'https://sfl-admin.surge.systems/#/errorLogin/',
+            expiresIn: '8h'
         },
         backoffice: {
             successLogin: `https://backoffice${postfix}.surge.systems/successLogin/`,
