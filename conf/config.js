@@ -59,6 +59,11 @@ config = {
             errorLogin: `https://backoffice${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
+        backofficestage2: {
+            successLogin: `https://backoffice-stage2.surge.systems/successLogin/`,
+            errorLogin: `https://backoffice-stage2.surge.systems/errorLogin/`,
+            expiresIn: '8h'
+        },
         umbrella: {
             successLogin: `https://umbrella${postfix}.surge.systems/successLogin/`,
             errorLogin: `https://umbrella${postfix}.surge.systems/errorLogin/`,
@@ -87,7 +92,8 @@ config = {
             'actionmediamtl.com',
             'grindstonecapital.ca',
             'hyuna.bb',
-            'ad-center.com'
+            'ad-center.com',
+            'milkbox.com'
         ]
     },
     influxdb: {
