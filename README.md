@@ -8,7 +8,7 @@
 
 # Init
 - run the following: 
-    > docker-composde build && docker-compose up
+    > docker-compose build && docker-compose up
 
 
 
