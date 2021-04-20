@@ -77,7 +77,7 @@ const getUserPermissions = async (employeeId, appKey) => {
 
         result.reduce((perms, perm) => {
             perms.push(perm.key);
-            
+
             return perms;
         }, permissions);
 
@@ -87,8 +87,26 @@ const getUserPermissions = async (employeeId, appKey) => {
     }
 };
 
+const getUserRole = async (employeeId) => {
+    try {
+        let result = await dbMysql.query(`SELECT r.name FROM am_roles AS r 
+                INNER JOIN am_employee_roles AS er ON er.role_id = r.id
+                WHERE er.employee_id = ?;`, [employeeId]);
+
+        await dbMysql.end();
+
+        console.log('get rolename');
+        console.log(result);
+
+        return result[0] ? result[0].name : '';
+    } catch (e) {
+        console.log(e)
+    }
+};
+
 module.exports = {
     getUser,
     setUser,
-    getUserPermissions
+    getUserPermissions,
+    getUserRole
 }

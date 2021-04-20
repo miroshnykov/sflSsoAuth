@@ -13,7 +13,7 @@ const config = require('plain-config')()
 const clientId = config.googleAuth.clientId
 const clientSecret = config.googleAuth.clientSecret
 const oauthCallback = config.googleAuth.oauthCallback
-const {getUser, setUser, getUserPermissions} = require('./db/user')
+const {getUser, setUser, getUserPermissions, getUserRole} = require('./db/user')
 
 const {v4} = require('uuid')
 const base64 = require('base-64')
@@ -183,6 +183,7 @@ app.get('/getUser', async (req, res) => {
 
     for (let i = 0; i < user.length; i++) {
         user[i].permissions = appKey ? await getUserPermissions(user[i].employee_id, appKey) : [];
+        user[i].role = appKey ? await getUserRole(user[i].employee_id, appKey) : "";
     }
 
     res.json(user)
