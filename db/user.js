@@ -39,6 +39,34 @@ const getUser = async (email) => {
     }
 }
 
+const getUserAuth0 = async (email) => {
+
+    try {
+
+        let employee = await dbMysql.query(`
+            SELECT e.id, e.is_admin
+            FROM employees e
+                     LEFT JOIN am_employee_emails aee ON e.id = aee.employee_id
+            WHERE e.email = '${email}'
+               OR aee.email = '${email}' LIMIT 1
+        `);
+        await dbMysql.end();
+
+        let userObj = {}
+        userObj.email = email
+        if (employee && employee[0]) {
+            userObj.employee_id = employee[0].id;
+            userObj.is_admin = employee[0].is_admin;
+        }
+
+        console.log(userObj)
+        return userObj
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
 const setUser = async (data) => {
 
     const {id, email, name, given_name, family_name, picture, link, hd} = data
@@ -77,7 +105,7 @@ const getUserPermissions = async (employeeId, appKey) => {
 
         result.reduce((perms, perm) => {
             perms.push(perm.key);
-            
+
             return perms;
         }, permissions);
 
@@ -90,5 +118,6 @@ const getUserPermissions = async (employeeId, appKey) => {
 module.exports = {
     getUser,
     setUser,
-    getUserPermissions
+    getUserPermissions,
+    getUserAuth0
 }
