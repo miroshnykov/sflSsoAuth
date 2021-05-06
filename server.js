@@ -13,7 +13,14 @@ const config = require('plain-config')()
 const clientId = config.googleAuth.clientId
 const clientSecret = config.googleAuth.clientSecret
 const oauthCallback = config.googleAuth.oauthCallback
-const {getUser, getUserAuth0, setUser, getUserPermissions, getUserRole} = require('./db/user')
+const {
+    getUser,
+    setUser,
+    getUserAuth0,
+    setUserAuth,
+    getUserPermissions,
+    getUserRole
+} = require('./db/user')
 
 const axios = require('axios')
 
@@ -153,6 +160,7 @@ const aut0RedirectToProject = async (code, state, res) => {
         // console.log('paramsUserInfo:', paramsUserInfo)
         let userInfo = await axios(paramsUserInfo);
 
+        await setUserAuth(userInfo.data)
         let userInfoData = await getUserAuth0(userInfo.data.email)
         console.log('userInfoData:', userInfoData)
 
@@ -249,7 +257,7 @@ app.get('/loginUrl', (req, res) => {
     }
     let connection = config.env === 'stage2' ? 'stage1' : config.env
     // console.log('connection:', connection)
-    let url = `${config.auth0.url}/authorize?response_type=code&scope=openid profile email&client_id=${config.auth0.client_id }&connection=${connection}&redirect_uri=${config.auth0.redirect_uri}/auth0Callback&state=${JSON.stringify(state)}`
+    let url = `${config.auth0.url}/authorize?response_type=code&scope=openid profile email&client_id=${config.auth0.client_id}&connection=${connection}&redirect_uri=${config.auth0.redirect_uri}/auth0Callback&state=${JSON.stringify(state)}`
     console.log(url)
     res.json(url)
 })

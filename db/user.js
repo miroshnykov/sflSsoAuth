@@ -44,9 +44,9 @@ const getUserAuth0 = async (email) => {
     try {
 
         let result = await dbMysql.query(`
-            select
-                u.email as email,
-                u.picture as picture
+            select u.email   as email,
+                   u.picture as picture,
+                   u.name    as name
             from users u
             where u.email = '${email}'
         `)
@@ -63,7 +63,7 @@ const getUserAuth0 = async (email) => {
         let userObj = {}
         userObj.email = email
         if (employee && employee[0]) {
-            if (result && result[0]){
+            if (result && result[0]) {
                 result[0].employee_id = employee[0].id;
                 result[0].is_admin = employee[0].is_admin;
             }
@@ -91,6 +91,27 @@ const setUser = async (data) => {
         await dbMysql.end()
 
         console.timeEnd('setUser')
+        return result
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+const setUserAuth = async (data) => {
+
+    const {email, picture} = data
+    const name = email.substring(0, email.lastIndexOf("@"));
+
+    try {
+
+        let result = await dbMysql.query(`
+            INSERT INTO users (email, name, picture)
+            VALUES (?, ?, ?) ON DUPLICATE KEY
+            UPDATE email=?, name =?,picture=?
+        `, [email, name, picture, email, name, picture])
+        await dbMysql.end()
+
+        // console.log(' \n\n setUserAuth:', result)
         return result
     } catch (e) {
         console.log(e)
@@ -145,6 +166,7 @@ const getUserRole = async (employeeId) => {
 module.exports = {
     getUser,
     setUser,
+    setUserAuth,
     getUserPermissions,
     getUserRole,
     getUserAuth0
