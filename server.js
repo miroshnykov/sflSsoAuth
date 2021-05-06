@@ -113,14 +113,14 @@ const getTokenSaveSession = async (code, state, res) => {
     })
 }
 
-const aut0RedirectToProject = async (code, projectName, res) => {
+const aut0RedirectToProject = async (code, state, res) => {
 
+    let projectInfo = JSON.parse(state)
+    console.log('projectName:', projectInfo.project)
+    let successLogin = config.googleAuth[projectInfo.project].successLogin
+    let errorLogin = config.googleAuth[projectInfo.project].errorLogin
 
-    console.log('projectName:', projectName)
-    let successLogin = config.googleAuth[projectName].successLogin
-    let errorLogin = config.googleAuth[projectName].errorLogin
-
-    console.log(` Project { ${projectName} }. successLogin:${successLogin} , errorLogin:${errorLogin}`)
+    console.log(` Project { ${projectInfo.project} }. successLogin:${successLogin} , errorLogin:${errorLogin}`)
     try {
 
         let tokenParams = {
@@ -140,9 +140,8 @@ const aut0RedirectToProject = async (code, projectName, res) => {
             data: JSON.stringify(tokenParams)
         };
 
-        console.log(getTokenPostData)
         let {data} = await axios(getTokenPostData);
-        console.log(data)
+
         let paramsUserInfo = {
             method: 'get',
             url: `${config.auth0.url}/userinfo`,
@@ -151,41 +150,46 @@ const aut0RedirectToProject = async (code, projectName, res) => {
             }
         };
 
-        console.log('paramsUserInfo:', paramsUserInfo)
+        // console.log('paramsUserInfo:', paramsUserInfo)
         let userInfo = await axios(paramsUserInfo);
-        console.log('userInfo:', userInfo.data)
 
         let userInfoData = await getUserAuth0(userInfo.data.email)
+        console.log('userInfoData:',userInfoData)
 
+        let userEmail = userInfoData[0].email
+        let employeeId = userInfoData[0].employee_id
+        let isAdmin = userInfoData[0].is_admin
         if (!successLogin) {
             console.log('  THERE IS NO REDIRECT URL, the project does not define  correctly ')
             return
         }
         let sessionId = v4()
-        let app_key = ''
-        let userPermissions = await getUserPermissions(userInfoData.employee_id, app_key);
-        console.log(`permissions for user ${userInfoData.employee_id} and project ${projectName}`);
+
+        let userPermissions = await getUserPermissions(employeeId, projectInfo.app_key);
+        console.log(`permissions for user ${employeeId} and project ${projectInfo.projectName}`);
         console.log(userPermissions);
-        // userPermissions.push('Login')
+        const domain = userEmail.substring(userEmail.lastIndexOf("@") +1);
+
         if (
-            (projectName !== 'umbrella' && config.whiteList.emails.includes(userInfoData.email))
+            (projectInfo.project !== 'umbrella' && config.whiteList.emails.includes(userEmail))
+            || (projectInfo.project !== 'umbrella' && config.whiteList.domains.includes(domain))
             || userPermissions.includes('login')
-            || (userInfoData.is_admin && projectName === 'umbrella')
+            || (isAdmin && projectInfo.project === 'umbrella')
         ) {
-            console.log(`login with project-${projectName}`)
-            const expiresIn = (projectName && config.googleAuth[projectName] && config.googleAuth[projectName].expiresIn)
-                ? config.googleAuth[projectName].expiresIn
+            console.log(`login with project-${projectInfo.project}`)
+            const expiresIn = (projectInfo.project && config.googleAuth[projectInfo.project] && config.googleAuth[projectInfo.project].expiresIn)
+                ? config.googleAuth[projectInfo.project].expiresIn
                 : '1h';
 
-            let token = jwt.sign({email: userInfoData.email, id: sessionId}, config.jwt_secret, {expiresIn})
+            let token = jwt.sign({email: userEmail, id: sessionId}, config.jwt_secret, {expiresIn})
 
             let bytes = utf8.encode(token);
             let encoded = base64.encode(bytes);
 
             res.redirect(`${successLogin}${encoded}`)
         } else {
-            let emailToSend = userInfoData.email.split('.').join("")
-            console.log(` AUTH0 Wrong domaine name ${emailToSend}`)
+            let emailToSend = userEmail.split('.').join("")
+            console.log(` AUTH0 Wrong domain name ${emailToSend}`)
             res.redirect(`${errorLogin}${emailToSend}`)
         }
 
@@ -237,7 +241,14 @@ app.get('/health', (req, res, next) => {
 
 app.get('/loginUrl', (req, res) => {
     const appKey = req.headers['am-app-key'];
-    let url = `${config.auth0.url}/authorize?response_type=code&scope=openid profile email&client_id=9XZwyehHLVqUj1bqSyRBc4i3VPiFKsAf&connection=dimon&redirect_uri=${config.auth0.redirect_uri}/auth0Callback&state=${req.query.projectName}`
+    const state = {
+        project: req.query.projectName
+    };
+    if (appKey) {
+        state.app_key = appKey;
+    }
+
+    let url = `${config.auth0.url}/authorize?response_type=code&scope=openid profile email&client_id=9XZwyehHLVqUj1bqSyRBc4i3VPiFKsAf&connection=dimon&redirect_uri=${config.auth0.redirect_uri}/auth0Callback&state=${JSON.stringify(state)}`
     console.log(url)
     res.json(url)
 })
