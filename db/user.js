@@ -43,6 +43,14 @@ const getUserAuth0 = async (email) => {
 
     try {
 
+        let result = await dbMysql.query(`
+            select
+                u.email as email,
+                u.picture as picture
+            from users u
+            where u.email = '${email}'
+        `)
+
         let employee = await dbMysql.query(`
             SELECT e.id, e.is_admin
             FROM employees e
@@ -55,12 +63,14 @@ const getUserAuth0 = async (email) => {
         let userObj = {}
         userObj.email = email
         if (employee && employee[0]) {
-            userObj.employee_id = employee[0].id;
-            userObj.is_admin = employee[0].is_admin;
+            if (result && result[0]){
+                result[0].employee_id = employee[0].id;
+                result[0].is_admin = employee[0].is_admin;
+            }
         }
 
-        console.log(userObj)
-        return userObj
+        console.log(result)
+        return result
     } catch (e) {
         console.log(e)
     }
