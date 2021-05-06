@@ -154,7 +154,7 @@ const aut0RedirectToProject = async (code, state, res) => {
         let userInfo = await axios(paramsUserInfo);
 
         let userInfoData = await getUserAuth0(userInfo.data.email)
-        console.log('userInfoData:',userInfoData)
+        console.log('userInfoData:', userInfoData)
 
         let userEmail = userInfoData[0].email
         let employeeId = userInfoData[0].employee_id
@@ -168,7 +168,7 @@ const aut0RedirectToProject = async (code, state, res) => {
         let userPermissions = await getUserPermissions(employeeId, projectInfo.app_key);
         console.log(`permissions for user ${employeeId} and project ${projectInfo.projectName}`);
         console.log(userPermissions);
-        const domain = userEmail.substring(userEmail.lastIndexOf("@") +1);
+        const domain = userEmail.substring(userEmail.lastIndexOf("@") + 1);
 
         if (
             (projectInfo.project !== 'umbrella' && config.whiteList.emails.includes(userEmail))
@@ -247,8 +247,9 @@ app.get('/loginUrl', (req, res) => {
     if (appKey) {
         state.app_key = appKey;
     }
-
-    let url = `${config.auth0.url}/authorize?response_type=code&scope=openid profile email&client_id=9XZwyehHLVqUj1bqSyRBc4i3VPiFKsAf&connection=dimon&redirect_uri=${config.auth0.redirect_uri}/auth0Callback&state=${JSON.stringify(state)}`
+    let connection = config.env === 'stage2' ? 'stage1' : config.env
+    // console.log('connection:', connection)
+    let url = `${config.auth0.url}/authorize?response_type=code&scope=openid profile email&client_id=${config.auth0.client_id }&connection=${connection}&redirect_uri=${config.auth0.redirect_uri}/auth0Callback&state=${JSON.stringify(state)}`
     console.log(url)
     res.json(url)
 })
