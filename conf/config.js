@@ -35,7 +35,7 @@ config = {
         client_id: '',
         client_secret: '',
         url: 'https://dev-npouz6tu.auth0.com',
-        redirect_uri: 'https://am-ssoauth.surge.systems/'
+        redirect_uri: 'https://am-ssoauth.surge.systems'
     },
     googleAuth: {
         oauthCallback: '',
@@ -93,7 +93,8 @@ config = {
             'artem.makarov@actionmediamtl.com',
             'maxim.litvinchik@milkbox.com',
             'nathan.parris@joventures.com',
-            'dmytro.miroshnykov@actionmediamtl.com'
+            'dmytro.miroshnykov@actionmediamtl.com',
+            'miroshnykov@gmail.com'
         ],
         domains: [
             'actionmediamtl.com',
