@@ -13,7 +13,7 @@ const config = require('plain-config')()
 const clientId = config.googleAuth.clientId
 const clientSecret = config.googleAuth.clientSecret
 const oauthCallback = config.googleAuth.oauthCallback
-const {getUser, getUserAuth0, setUser, getUserPermissions} = require('./db/user')
+const {getUser, getUserAuth0, setUser, getUserPermissions, getUserRole} = require('./db/user')
 
 const axios = require('axios')
 
@@ -281,6 +281,7 @@ app.get('/getUser', async (req, res) => {
 
     for (let i = 0; i < user.length; i++) {
         user[i].permissions = appKey ? await getUserPermissions(user[i].employee_id, appKey) : [];
+        user[i].role = appKey ? await getUserRole(user[i].employee_id, appKey) : "";
     }
 
     res.json(user)
