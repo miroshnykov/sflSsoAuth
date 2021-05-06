@@ -255,7 +255,7 @@ app.get('/loginUrl', (req, res) => {
     if (appKey) {
         state.app_key = appKey;
     }
-    let connection = config.env === 'stage2' ? 'stage1' : config.env
+    let connection = config.env === 'staging' || config.env === 'staging2' ? 'stage1' : config.env
     // console.log('connection:', connection)
     let url = `${config.auth0.url}/authorize?response_type=code&scope=openid profile email&client_id=${config.auth0.client_id}&connection=${connection}&redirect_uri=${config.auth0.redirect_uri}/auth0Callback&state=${JSON.stringify(state)}`
     console.log(url)
