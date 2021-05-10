@@ -31,6 +31,12 @@ config = {
         password: '',
         database: ''
     },
+    auth0: {
+        client_id: '',
+        client_secret: '',
+        url: 'https://dev-npouz6tu.auth0.com',
+        redirect_uri: 'https://am-ssoauth.surge.systems'
+    },
     googleAuth: {
         oauthCallback: '',
         pcapi: {
@@ -59,6 +65,11 @@ config = {
             errorLogin: `https://backoffice${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
+        backofficestage2: {
+            successLogin: `https://backoffice-stage2.surge.systems/successLogin/`,
+            errorLogin: `https://backoffice-stage2.surge.systems/errorLogin/`,
+            expiresIn: '8h'
+        },
         umbrella: {
             successLogin: `https://umbrella${postfix}.surge.systems/successLogin/`,
             errorLogin: `https://umbrella${postfix}.surge.systems/errorLogin/`,
@@ -81,7 +92,9 @@ config = {
             'jeffrey.tayoto@ad-center.com',
             'artem.makarov@actionmediamtl.com',
             'maxim.litvinchik@milkbox.com',
-            'nathan.parris@joventures.com'
+            'nathan.parris@joventures.com',
+            'dmytro.miroshnykov@actionmediamtl.com',
+            'miroshnykov@gmail.com'
         ],
         domains: [
             'actionmediamtl.com',

@@ -39,6 +39,44 @@ const getUser = async (email) => {
     }
 }
 
+const getUserAuth0 = async (email) => {
+
+    try {
+
+        let result = await dbMysql.query(`
+            select u.email   as email,
+                   u.picture as picture,
+                   u.name    as name
+            from users u
+            where u.email = '${email}'
+        `)
+
+        let employee = await dbMysql.query(`
+            SELECT e.id, e.is_admin
+            FROM employees e
+                     LEFT JOIN am_employee_emails aee ON e.id = aee.employee_id
+            WHERE e.email = '${email}'
+               OR aee.email = '${email}' LIMIT 1
+        `);
+        await dbMysql.end();
+
+        let userObj = {}
+        userObj.email = email
+        if (employee && employee[0]) {
+            if (result && result[0]) {
+                result[0].employee_id = employee[0].id;
+                result[0].is_admin = employee[0].is_admin;
+            }
+        }
+
+        console.log(result)
+        return result
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
 const setUser = async (data) => {
 
     const {id, email, name, given_name, family_name, picture, link, hd} = data
@@ -53,6 +91,27 @@ const setUser = async (data) => {
         await dbMysql.end()
 
         console.timeEnd('setUser')
+        return result
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+const setUserAuth = async (data) => {
+
+    const {email, picture} = data
+    const name = email.substring(0, email.lastIndexOf("@"));
+
+    try {
+
+        let result = await dbMysql.query(`
+            INSERT INTO users (email, name, picture)
+            VALUES (?, ?, ?) ON DUPLICATE KEY
+            UPDATE email=?, name =?,picture=?
+        `, [email, name, picture, email, name, picture])
+        await dbMysql.end()
+
+        // console.log(' \n\n setUserAuth:', result)
         return result
     } catch (e) {
         console.log(e)
@@ -77,7 +136,7 @@ const getUserPermissions = async (employeeId, appKey) => {
 
         result.reduce((perms, perm) => {
             perms.push(perm.key);
-            
+
             return perms;
         }, permissions);
 
@@ -87,8 +146,28 @@ const getUserPermissions = async (employeeId, appKey) => {
     }
 };
 
+const getUserRole = async (employeeId) => {
+    try {
+        let result = await dbMysql.query(`SELECT r.name FROM am_roles AS r 
+                INNER JOIN am_employee_roles AS er ON er.role_id = r.id
+                WHERE er.employee_id = ?;`, [employeeId]);
+
+        await dbMysql.end();
+
+        console.log('get rolename');
+        console.log(result);
+
+        return result[0] ? result[0].name : '';
+    } catch (e) {
+        console.log(e)
+    }
+};
+
 module.exports = {
     getUser,
     setUser,
-    getUserPermissions
+    setUserAuth,
+    getUserPermissions,
+    getUserRole,
+    getUserAuth0
 }
