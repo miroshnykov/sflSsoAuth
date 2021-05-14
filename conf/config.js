@@ -80,6 +80,11 @@ config = {
             errorLogin: `https://payments-tool${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
+        adminLegacy: {
+            successLogin: 'https://admin.ad-center.com/front/auth_success/',
+            errorLogin: 'https://admin.ad-center.com/front/auth_error/',
+            expiresIn: '8h'
+        },
         clientId: '',
         clientSecret: ''
     },
