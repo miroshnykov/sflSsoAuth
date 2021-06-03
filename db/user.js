@@ -58,6 +58,10 @@ const getUserAuth0 = async (email) => {
             WHERE e.email = '${email}'
                OR aee.email = '${email}' LIMIT 1
         `);
+
+        let sfl_manager = await dbMysql.query(`
+            SELECT id FROM sfl_affiliate_managers WHERE email = '${email}';
+        `);
         await dbMysql.end();
 
         let userObj = {}
@@ -66,6 +70,13 @@ const getUserAuth0 = async (email) => {
             if (result && result[0]) {
                 result[0].employee_id = employee[0].id;
                 result[0].is_admin = employee[0].is_admin;
+            }
+        }
+        if (result && result[0]) {
+            if(sfl_manager && sfl_manager[0]) {
+                result[0].sfl_manager_id = sfl_manager[0].id;
+            } else {
+                result[0].sfl_manager_id = null;
             }
         }
 

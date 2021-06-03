@@ -47,7 +47,7 @@ config = {
             successLogin: 'https://optiai-platform1.surge.systems/successLogin/',
             errorLogin: 'https://optiai-platform1.surge.systems/errorLogin/'
         },
-        sfl: {
+        sflAdv: {
             successLogin: 'https://sfl-advertiser.surge.systems/#/successLogin/',
             errorLogin: 'https://sfl-advertiser.surge.systems/#/errorLogin/'
         },
