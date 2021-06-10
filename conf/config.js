@@ -85,6 +85,12 @@ config = {
             errorLogin: 'https://admin.ad-center.com/front/auth_error/',
             expiresIn: '8h'
         },
+        // custom offers admin https://co-admin-ui-stage2.surge.systems/login
+        coAdmin: {
+            successLogin: `https://co-admin-ui${postfix}.surge.systems/successLogin/`,
+            errorLogin: `https://co-admin-ui${postfix}.surge.systems/errorLogin/`,
+            expiresIn: '8h'
+        },
         clientId: '',
         clientSecret: ''
     },
