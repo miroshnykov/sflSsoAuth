@@ -96,6 +96,11 @@ config = {
             errorLogin: `https://co-admin-ui-stage2.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
+        gotzha: {
+            successLogin: `https://backoffice.gotzha.com/successLogin/`,
+            errorLogin: `https://backoffice.gotzha.com/errorLogin/`,
+            expiresIn: '8h'
+        },
         clientId: '',
         clientSecret: ''
     },
