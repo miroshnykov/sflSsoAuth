@@ -91,6 +91,11 @@ config = {
             errorLogin: `https://co-admin-ui${postfix}.surge.systems/errorLogin/`,
             expiresIn: '8h'
         },
+        coAdminStage2: {
+            successLogin: `https://co-admin-ui-stage2.surge.systems/successLogin/`,
+            errorLogin: `https://co-admin-ui-stage2.surge.systems/errorLogin/`,
+            expiresIn: '8h'
+        },
         clientId: '',
         clientSecret: ''
     },
